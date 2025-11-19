@@ -179,7 +179,7 @@ def extract_user_editable_prompt() -> str:
 4. ObjectExp1: "해변 곳곳에는 사람들이 여유롭게 걸으며 휴식을 즐기고 있다." (9어절)
 5. ObjectExp2: "유리 외벽이 반짝이는 고층 건물들이 빽빽하게 늘어서 있다." (10어절)
 
-**총 어절 수: 51어절 ✅ (50어절 이상 충족)**
+**총 어절 수: 51어절  (50어절 이상 충족)**
 
 **좋은 예시 2: 레스토랑 장면 (사람 수 1-4명은 정확히 명시)**
 1. SceneExp: "실내 레스토랑에서 한 명의 셰프가 큰 철판 위에서 요리하고 있으며, 손님들이 이를 지켜보는 활기찬 장면이다." (17어절)
@@ -188,7 +188,7 @@ def extract_user_editable_prompt() -> str:
 4. ObjectExp1: "흰색 조리복과 마스크를 착용한 한 명의 셰프가 철판 위에서 능숙하게 요리하고 있다." (13어절)
 5. ObjectExp2: "세 명의 손님들이 카운터에 앉아 셰프의 요리 과정을 흥미롭게 지켜보고 있다." (12어절)
 
-**총 어절 수: 62어절 ✅ (50어절 이상 충족, 1-4명은 정확한 수 명시)**
+**총 어절 수: 62어절  (50어절 이상 충족, 1-4명은 정확한 수 명시)**
 
 **좋은 예시 3: 요트 장면 (5명 이상은 "여러 명" 사용)**
 1. SceneExp: "푸른 하늘과 바다를 배경으로 여러 명의 여성들이 요트 위에서 즐거운 시간을 보내는 활기찬 장면이다." (17어절)
@@ -197,30 +197,30 @@ def extract_user_editable_prompt() -> str:
 4. ObjectExp1: "여러 명의 여성들이 요트 위에 앉거나 서서 카메라를 향해 밝게 웃으며 포즈를 취하고 있다." (16어절)
 5. ObjectExp2: "배경에는 푸른 바다 위로 길게 뻗은 다리가 보이며, 요트의 돛대가 하늘을 향해 높이 솟아 있다." (18어절)
 
-**총 어절 수: 77어절 ✅ (50어절 이상 충족, 5명 이상은 "여러 명" 사용)**
+**총 어절 수: 77어절  (50어절 이상 충족, 5명 이상은 "여러 명" 사용)**
 
 
 ## 최종 출력 전 필수 검증
 
 **자동 계산 검증:**
-1. ✅ 이미지 메타데이터가 정확히 입력되었는가?
+1.  이미지 메타데이터가 정확히 입력되었는가?
    - width, height, format 확인
 
 **논리적 검증:**
-1. ✅ category_info의 LocationCategory와 EraCategory가 정확히 선택되었는가?
+1.  category_info의 LocationCategory와 EraCategory가 정확히 선택되었는가?
    - 이미지 내용과 일치하는지 확인
 
-2. ✅ annotation_info의 5개 설명문이 모두 작성되었는가?
+2.  annotation_info의 5개 설명문이 모두 작성되었는가?
    - SceneExp, ColortoneExp, CompositionExp, ObjectExp1, ObjectExp2
 
-3. ✅ 객체1과 객체2가 중복되지 않는가?
+3.  객체1과 객체2가 중복되지 않는가?
 
-4. ✅ 총 어절 수가 50어절 이상인가?
+4.  총 어절 수가 50어절 이상인가?
    - 5개 문장의 description을 모두 합쳐 띄어쓰기 기준으로 어절 수 계산
    - 총 어절 수 < 50 → 각 문장에 구체적 세부 묘사 추가 후 다시 계산
    - 총 어절 수 ≥ 50 → 통과
 
-5. ✅ Explanation이 5개 문장을 순서대로 합친 것인가?
+5.  Explanation이 5개 문장을 순서대로 합친 것인가?
    - SceneExp + ColortoneExp + CompositionExp + ObjectExp1 + ObjectExp2
 
 **위 검증을 통과하지 못하면 처음부터 다시 분석!**
@@ -360,43 +360,43 @@ st.title("🖼️ 배경 이미지 분석기")
 st.markdown("한국적 배경 이미지를 분석하고 설명문을 생성합니다.")
 
 # 사이드바 - 설정
-with st.sidebar:
-    st.header("⚙️ 설정")
+# with st.sidebar:
+#     st.header("⚙️ 설정")
 
-    # API 키 입력 (Streamlit Cloud secrets 우선, 없으면 .env)
-    default_api_key = ''
-    if hasattr(st, 'secrets') and 'GOOGLE_API_KEY_IMAGE' in st.secrets:
-        # Streamlit Cloud의 secrets에서 로드
-        default_api_key = st.secrets['GOOGLE_API_KEY_IMAGE']
-    else:
-        # 로컬 환경의 .env에서 로드
-        default_api_key = os.getenv('GOOGLE_API_KEY_IMAGE', '')
+#     # API 키 입력 (Streamlit Cloud secrets 우선, 없으면 .env)
+#     default_api_key = ''
+#     if hasattr(st, 'secrets') and 'GOOGLE_API_KEY_IMAGE' in st.secrets:
+#         # Streamlit Cloud의 secrets에서 로드
+#         default_api_key = st.secrets['GOOGLE_API_KEY_IMAGE']
+#     else:
+#         # 로컬 환경의 .env에서 로드
+#         default_api_key = os.getenv('GOOGLE_API_KEY_IMAGE', '')
 
-    api_key = st.text_input(
-        "Gemini API 키",
-        value=default_api_key,
-        type="password",
-        help="Google Gemini API 키를 입력하세요"
-    )
+#     api_key = st.text_input(
+#         "Gemini API 키",
+#         value=default_api_key,
+#         type="password",
+#         help="Google Gemini API 키를 입력하세요"
+#     )
 
-    if api_key:
-        st.success("✅ API 키 로드 완료")
-    else:
-        st.error("❌ API 키를 입력하세요")
+#     if api_key:
+#         st.success("✅ API 키 로드 완료")
+#     else:
+#         st.error("❌ API 키를 입력하세요")
 
-    st.divider()
-    st.markdown("### 📖 사용 방법")
-    st.markdown("""
-    1. API 키를 입력하세요
-    2. 이미지를 업로드하세요
-    3. 프롬프트를 수정하세요 (선택사항)
-    4. '분석 시작' 버튼을 클릭하세요
-    """)
+#     st.divider()
+#     st.markdown("### 📖 사용 방법")
+#     st.markdown("""
+#     1. API 키를 입력하세요
+#     2. 이미지를 업로드하세요
+#     3. 프롬프트를 수정하세요 (선택사항)
+#     4. '분석 시작' 버튼을 클릭하세요
+#     """)
 
-    st.divider()
-    st.markdown("### ℹ️ 정보")
-    st.markdown("**모델**: gemini-2.5-flash")
-    st.markdown("**출력**: JSON (category_info, annotation_info)")
+#     st.divider()
+#     st.markdown("### ℹ️ 정보")
+#     st.markdown("**모델**: gemini-2.5-flash")
+#     st.markdown("**출력**: JSON (category_info, annotation_info)")
 
 # 메인 컨텐츠 - 2개 컬럼
 col1, col2 = st.columns([1, 1])
