@@ -442,7 +442,7 @@ with col1:
         st.info(f"📊 {image.width} × {image.height} px | {image.format} | {image_metadata['file_size']:,} bytes")
 
     # 2. 프롬프트 편집
-    st.subheader("2. 프롬프트 편집 (선택사항)")
+    st.subheader("2. 프롬프트 편집")
 
     # 시스템 고정 섹션 안내
     st.warning("""
