@@ -13,9 +13,9 @@ import asyncio
 from dotenv import load_dotenv
 
 # raw_image25 모듈 import
-from raw_image25.lib.gemini_analyzer import GeminiImageAnalyzer
-from raw_image25.lib.gemini_prompt import get_image_analysis_prompt
-from raw_image25.lib.categories import CATEGORY_DATA, CATEGORY_LABELS
+from lib.gemini_analyzer import GeminiImageAnalyzer
+from lib.gemini_prompt import get_image_analysis_prompt
+from lib.categories import CATEGORY_DATA, CATEGORY_LABELS
 
 # 환경 변수 로드
 load_dotenv()
@@ -357,7 +357,7 @@ async def analyze_image_async(image_path: str, mime_type: str, image_metadata: d
 
 # 메인 앱
 st.title("🖼️ 배경 이미지 분석기")
-st.markdown("Google Gemini를 사용하여 한국적 배경 이미지를 분석하고 설명문을 생성합니다.")
+st.markdown("한국적 배경 이미지를 분석하고 설명문을 생성합니다.")
 
 # 사이드바 - 설정
 with st.sidebar:
