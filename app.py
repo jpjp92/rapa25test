@@ -363,18 +363,21 @@ st.markdown("한국적 배경 이미지를 분석하고 설명문을 생성합�
 with st.sidebar:
     st.header("⚙️ 설정")
 
-    # API 키 입력 (Streamlit Cloud secrets 우선, 없으면 .env)
-    default_api_key = ''
-    if hasattr(st, 'secrets') and 'GOOGLE_API_KEY_IMAGE' in st.secrets:
-        # Streamlit Cloud의 secrets에서 로드
-        default_api_key = st.secrets['GOOGLE_API_KEY_IMAGE']
-    else:
-        # 로컬 환경의 .env에서 로드
-        default_api_key = os.getenv('GOOGLE_API_KEY_IMAGE', '')
+    # API 키 자동 로드 (.env 또는 Streamlit Cloud secrets)
+    api_key = os.getenv('GOOGLE_API_KEY_IMAGE', '')
 
+    # Streamlit Cloud에서는 secrets 사용 (try-except로 안전하게 처리)
+    try:
+        if 'GOOGLE_API_KEY_IMAGE' in st.secrets:
+            api_key = st.secrets['GOOGLE_API_KEY_IMAGE']
+    except (FileNotFoundError, AttributeError):
+        # 로컬 환경에서 secrets.toml 없음 - .env 사용
+        pass
+
+    # API 키 수동 입력 필드 (필요 시 주석 해제)
     # api_key = st.text_input(
     #     "Gemini API 키",
-    #     value=default_api_key,
+    #     value=api_key,
     #     type="password",
     #     help="Google Gemini API 키를 입력하세요"
     # )
@@ -382,21 +385,20 @@ with st.sidebar:
     if api_key:
         st.success("✅ API 키 로드 완료")
     else:
-        st.error("❌ API 키를 입력하세요")
+        st.error("❌ API 키를 .env 파일에 설정하세요")
 
     st.divider()
     st.markdown("### 📖 사용 방법")
     st.markdown("""
-    1. API 키를 입력하세요
-    2. 이미지를 업로드하세요
-    3. 프롬프트를 수정하세요 (선택사항)
-    4. '분석 시작' 버튼을 클릭하세요
+    1. 이미지를 업로드하세요
+    2. 프롬프트를 수정하세요 (선택사항)
+    3. '분석 시작' 버튼을 클릭하세요
     """)
 
     st.divider()
-    # st.markdown("### ℹ️ 정보")
-    # st.markdown("**모델**: gemini-2.5-flash")
-    # st.markdown("**출력**: JSON (category_info, annotation_info)")
+    st.markdown("### ℹ️ 정보")
+    st.markdown("**모델**: gemini-2.5-flash")
+    st.markdown("**출력**: JSON (category_info, annotation_info)")
 
 # 메인 컨텐츠 - 2개 컬럼
 col1, col2 = st.columns([1, 1])
