@@ -863,7 +863,7 @@ with tab2:
                     "meta": {
                         "width": 1920,
                         "height": 1080,
-                        "format": "JPEG"
+                        "format": "JPG"
                     },
                     "category_info": {
                         "LocationCategory": 2,
