@@ -452,7 +452,7 @@ except (FileNotFoundError, AttributeError):
 
 # 헤더
 st.markdown('<h1 class="main-header">배경 이미지 분석기</h1>', unsafe_allow_html=True)
-st.markdown('<p class="sub-header">Gemini2.5 Flash 모델로 배경 이미지를 분석하고 설명문을 생성합니다.</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-header">Gemini 2.5 Flash 모델로 배경 이미지를 분석하고 설명문을 생성합니다.</p>', unsafe_allow_html=True)
 
 # API 키 상태 표시
 if not api_key:
