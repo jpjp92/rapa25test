@@ -372,12 +372,12 @@ with st.sidebar:
         # 로컬 환경의 .env에서 로드
         default_api_key = os.getenv('GOOGLE_API_KEY_IMAGE', '')
 
-    api_key = st.text_input(
-        "Gemini API 키",
-        value=default_api_key,
-        type="password",
-        help="Google Gemini API 키를 입력하세요"
-    )
+    # api_key = st.text_input(
+    #     "Gemini API 키",
+    #     value=default_api_key,
+    #     type="password",
+    #     help="Google Gemini API 키를 입력하세요"
+    # )
 
     if api_key:
         st.success("✅ API 키 로드 완료")
