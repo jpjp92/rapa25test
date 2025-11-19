@@ -360,43 +360,43 @@ st.title("🖼️ 배경 이미지 분석기")
 st.markdown("한국적 배경 이미지를 분석하고 설명문을 생성합니다.")
 
 # 사이드바 - 설정
-# with st.sidebar:
-#     st.header("⚙️ 설정")
+with st.sidebar:
+    st.header("⚙️ 설정")
 
-#     # API 키 입력 (Streamlit Cloud secrets 우선, 없으면 .env)
-#     default_api_key = ''
-#     if hasattr(st, 'secrets') and 'GOOGLE_API_KEY_IMAGE' in st.secrets:
-#         # Streamlit Cloud의 secrets에서 로드
-#         default_api_key = st.secrets['GOOGLE_API_KEY_IMAGE']
-#     else:
-#         # 로컬 환경의 .env에서 로드
-#         default_api_key = os.getenv('GOOGLE_API_KEY_IMAGE', '')
+    # API 키 입력 (Streamlit Cloud secrets 우선, 없으면 .env)
+    default_api_key = ''
+    if hasattr(st, 'secrets') and 'GOOGLE_API_KEY_IMAGE' in st.secrets:
+        # Streamlit Cloud의 secrets에서 로드
+        default_api_key = st.secrets['GOOGLE_API_KEY_IMAGE']
+    else:
+        # 로컬 환경의 .env에서 로드
+        default_api_key = os.getenv('GOOGLE_API_KEY_IMAGE', '')
 
-#     api_key = st.text_input(
-#         "Gemini API 키",
-#         value=default_api_key,
-#         type="password",
-#         help="Google Gemini API 키를 입력하세요"
-#     )
+    api_key = st.text_input(
+        "Gemini API 키",
+        value=default_api_key,
+        type="password",
+        help="Google Gemini API 키를 입력하세요"
+    )
 
-#     if api_key:
-#         st.success("✅ API 키 로드 완료")
-#     else:
-#         st.error("❌ API 키를 입력하세요")
+    if api_key:
+        st.success("✅ API 키 로드 완료")
+    else:
+        st.error("❌ API 키를 입력하세요")
 
-#     st.divider()
-#     st.markdown("### 📖 사용 방법")
-#     st.markdown("""
-#     1. API 키를 입력하세요
-#     2. 이미지를 업로드하세요
-#     3. 프롬프트를 수정하세요 (선택사항)
-#     4. '분석 시작' 버튼을 클릭하세요
-#     """)
+    st.divider()
+    st.markdown("### 📖 사용 방법")
+    st.markdown("""
+    1. API 키를 입력하세요
+    2. 이미지를 업로드하세요
+    3. 프롬프트를 수정하세요 (선택사항)
+    4. '분석 시작' 버튼을 클릭하세요
+    """)
 
-#     st.divider()
-#     st.markdown("### ℹ️ 정보")
-#     st.markdown("**모델**: gemini-2.5-flash")
-#     st.markdown("**출력**: JSON (category_info, annotation_info)")
+    st.divider()
+    # st.markdown("### ℹ️ 정보")
+    # st.markdown("**모델**: gemini-2.5-flash")
+    # st.markdown("**출력**: JSON (category_info, annotation_info)")
 
 # 메인 컨텐츠 - 2개 컬럼
 col1, col2 = st.columns([1, 1])
