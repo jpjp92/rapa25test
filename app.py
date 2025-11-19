@@ -634,7 +634,6 @@ with col_right:
         
         # 카테고리 & 어절 수 체크
         col1, col2 = st.columns(2)
-        
         with col1:
             with st.container(border=True):
                 st.markdown("##### 🏷️ 카테고리")
@@ -644,8 +643,13 @@ with col_right:
                     loc_labels = {1: "실내", 2: "실외", 3: "혼합"}
                     era_labels = {1: "전통", 2: "현대", 3: "혼합", 4: "기타"}
                     
-                    st.write(f"**장소**: {loc_labels.get(cat_info.get('LocationCategory', 0), 'N/A')}")
-                    st.write(f"**시대**: {era_labels.get(cat_info.get('EraCategory', 0), 'N/A')}")
+                    loc_value = cat_info.get('LocationCategory', 0)
+                    era_value = cat_info.get('EraCategory', 0)
+                    
+                    st.write(f"**장소**: {loc_labels.get(loc_value, 'N/A')} ({loc_value})")
+                    st.write(f"**시대**: {era_labels.get(era_value, 'N/A')} ({era_value})")
+                    st.write("")  # 공백 추가
+                    st.caption("카테고리 분류 완료")
         
         with col2:
             with st.container(border=True):
@@ -653,26 +657,57 @@ with col_right:
                 if 'annotation_info' in result:
                     ann_info = result['annotation_info']
                     
-                    # 각 설명문의 어절 수 계산
-                    word_counts = {
-                        '장면': len(ann_info.get('SceneExp', '').split()),
-                        '색감': len(ann_info.get('ColortoneExp', '').split()),
-                        '구도': len(ann_info.get('CompositionExp', '').split()),
-                        '객체1': len(ann_info.get('ObjectExp1', '').split()),
-                        '객체2': len(ann_info.get('ObjectExp2', '').split())
-                    }
+                    # 총 어절 수 계산
+                    total_words = sum([
+                        len(ann_info.get(key, '').split()) 
+                        for key in ['SceneExp', 'ColortoneExp', 'CompositionExp', 'ObjectExp1', 'ObjectExp2']
+                    ])
                     
-                    total_words = sum(word_counts.values())
+                    # 50어절 기준 충족 여부
+                    status = "✅ 충족" if total_words >= 50 else f"❌ 미달 (-{50-total_words})"
                     
-                    # 총 어절 수 표시 (50어절 기준 충족 여부)
-                    if total_words >= 50:
-                        st.success(f"**총 {total_words}어절** ✅")
-                    else:
-                        st.error(f"**총 {total_words}어절** ❌ (50어절 미만)")
+                    st.write(f"**총 어절**: {total_words}어절")
+                    st.write(f"**상태**: {status}")
+                    st.write("")  # 공백 추가
+                    st.caption("최소 50어절 필요")
+        # with col1:
+        #     with st.container(border=True):
+        #         st.markdown("##### 🏷️ 카테고리")
+        #         if 'category_info' in result:
+        #             cat_info = result['category_info']
                     
-                    # 상세 어절 수 (작은 텍스트로)
-                    detail_text = " / ".join([f"{k}:{v}" for k, v in word_counts.items()])
-                    st.caption(detail_text)
+        #             loc_labels = {1: "실내", 2: "실외", 3: "혼합"}
+        #             era_labels = {1: "전통", 2: "현대", 3: "혼합", 4: "기타"}
+                    
+        #             st.write(f"**장소**: {loc_labels.get(cat_info.get('LocationCategory', 0), 'N/A')}")
+        #             st.write(f"**시대**: {era_labels.get(cat_info.get('EraCategory', 0), 'N/A')}")
+        
+        # with col2:
+        #     with st.container(border=True):
+        #         st.markdown("##### 📊 어절 수 체크")
+        #         if 'annotation_info' in result:
+        #             ann_info = result['annotation_info']
+                    
+        #             # 각 설명문의 어절 수 계산
+        #             word_counts = {
+        #                 '장면': len(ann_info.get('SceneExp', '').split()),
+        #                 '색감': len(ann_info.get('ColortoneExp', '').split()),
+        #                 '구도': len(ann_info.get('CompositionExp', '').split()),
+        #                 '객체1': len(ann_info.get('ObjectExp1', '').split()),
+        #                 '객체2': len(ann_info.get('ObjectExp2', '').split())
+        #             }
+                    
+        #             total_words = sum(word_counts.values())
+                    
+        #             # 총 어절 수 표시 (50어절 기준 충족 여부)
+        #             if total_words >= 50:
+        #                 st.success(f"**총 {total_words}어절** ✅")
+        #             else:
+        #                 st.error(f"**총 {total_words}어절** ❌ (50어절 미만)")
+                    
+        #             # 상세 어절 수 (작은 텍스트로)
+        #             detail_text = " / ".join([f"{k}:{v}" for k, v in word_counts.items()])
+        #             st.caption(detail_text)
         
         # 상세 설명문
         with st.container(border=True):
