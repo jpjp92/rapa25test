@@ -619,71 +619,155 @@ with tab1:
                         with st.expander("🔍 상세 오류"):
                             import traceback
                             st.code(traceback.format_exc())
+    # col_right의 분석 결과 부분만 수정
+with col_right:
+    st.markdown("### 📊 분석 결과")
     
-    with col_right:
-        st.markdown("### 📊 분석 결과")
+    if st.session_state.get('analysis_result'):
+        result = st.session_state['analysis_result']
         
-        if st.session_state.get('analysis_result'):
-            result = st.session_state['analysis_result']
-            
-            # 통합 설명문
+        # 통합 설명문
+        with st.container(border=True):
+            st.markdown("#### 📄 통합 설명문")
+            if 'annotation_info' in result and 'Explanation' in result['annotation_info']:
+                st.markdown(f"**{result['annotation_info']['Explanation']}**")
+        
+        # 카테고리 & 어절 수 체크
+        col1, col2 = st.columns(2)
+        
+        with col1:
             with st.container(border=True):
-                st.markdown("#### 📄 통합 설명문")
-                if 'annotation_info' in result and 'Explanation' in result['annotation_info']:
-                    st.markdown(f"**{result['annotation_info']['Explanation']}**")
-            
-            # 카테고리 & 메타데이터
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                with st.container(border=True):
-                    st.markdown("##### 🏷️ 카테고리")
-                    if 'category_info' in result:
-                        cat_info = result['category_info']
-                        
-                        loc_labels = {1: "실내", 2: "실외", 3: "혼합"}
-                        era_labels = {1: "전통", 2: "현대", 3: "혼합", 4: "기타"}
-                        
-                        st.write(f"**장소**: {loc_labels.get(cat_info.get('LocationCategory', 0), 'N/A')}")
-                        st.write(f"**시대**: {era_labels.get(cat_info.get('EraCategory', 0), 'N/A')}")
-            
-            with col2:
-                with st.container(border=True):
-                    st.markdown("##### 📋 메타데이터")
-                    if 'meta' in result:
-                        meta = result['meta']
-                        st.write(f"**크기**: {meta.get('width', 'N/A')} × {meta.get('height', 'N/A')} px")
-                        st.write(f"**형식**: {meta.get('format', 'N/A')}")
-            
-            # 상세 설명문
+                st.markdown("##### 🏷️ 카테고리")
+                if 'category_info' in result:
+                    cat_info = result['category_info']
+                    
+                    loc_labels = {1: "실내", 2: "실외", 3: "혼합"}
+                    era_labels = {1: "전통", 2: "현대", 3: "혼합", 4: "기타"}
+                    
+                    st.write(f"**장소**: {loc_labels.get(cat_info.get('LocationCategory', 0), 'N/A')}")
+                    st.write(f"**시대**: {era_labels.get(cat_info.get('EraCategory', 0), 'N/A')}")
+        
+        with col2:
             with st.container(border=True):
-                st.markdown("#### ✍️ 상세 설명문")
-                
+                st.markdown("##### 📊 어절 수 체크")
                 if 'annotation_info' in result:
                     ann_info = result['annotation_info']
                     
-                    with st.expander("🎬 장면 설명", expanded=True):
-                        st.write(ann_info.get('SceneExp', 'N/A'))
+                    # 각 설명문의 어절 수 계산
+                    word_counts = {
+                        '장면': len(ann_info.get('SceneExp', '').split()),
+                        '색감': len(ann_info.get('ColortoneExp', '').split()),
+                        '구도': len(ann_info.get('CompositionExp', '').split()),
+                        '객체1': len(ann_info.get('ObjectExp1', '').split()),
+                        '객체2': len(ann_info.get('ObjectExp2', '').split())
+                    }
                     
-                    with st.expander("🎨 색감 설명", expanded=True):
-                        st.write(ann_info.get('ColortoneExp', 'N/A'))
+                    total_words = sum(word_counts.values())
                     
-                    with st.expander("📐 구도 설명", expanded=True):
-                        st.write(ann_info.get('CompositionExp', 'N/A'))
+                    # 총 어절 수 표시 (50어절 기준 충족 여부)
+                    if total_words >= 50:
+                        st.success(f"**총 {total_words}어절** ✅")
+                    else:
+                        st.error(f"**총 {total_words}어절** ❌ (50어절 미만)")
                     
-                    with st.expander("👤 객체1 설명", expanded=True):
-                        st.write(ann_info.get('ObjectExp1', 'N/A'))
-                    
-                    with st.expander("🏛️ 객체2 설명", expanded=True):
-                        st.write(ann_info.get('ObjectExp2', 'N/A'))
-        else:
-            # Empty state
-            with st.container(border=True):
-                st.info("📝 이미지를 업로드하고 분석을 시작하면 결과가 여기에 표시됩니다.")
+                    # 상세 어절 수 (작은 텍스트로)
+                    detail_text = " / ".join([f"{k}:{v}" for k, v in word_counts.items()])
+                    st.caption(detail_text)
+        
+        # 상세 설명문
+        with st.container(border=True):
+            st.markdown("#### ✍️ 상세 설명문")
+            
+            if 'annotation_info' in result:
+                ann_info = result['annotation_info']
                 
-                # 높이 맞추기
-                for _ in range(10):
-                    st.write("")
+                # 각 설명문과 어절 수를 함께 표시
+                with st.expander(f"🎬 장면 설명 ({len(ann_info.get('SceneExp', '').split())}어절)", expanded=True):
+                    st.write(ann_info.get('SceneExp', 'N/A'))
+                
+                with st.expander(f"🎨 색감 설명 ({len(ann_info.get('ColortoneExp', '').split())}어절)", expanded=True):
+                    st.write(ann_info.get('ColortoneExp', 'N/A'))
+                
+                with st.expander(f"📐 구도 설명 ({len(ann_info.get('CompositionExp', '').split())}어절)", expanded=True):
+                    st.write(ann_info.get('CompositionExp', 'N/A'))
+                
+                with st.expander(f"👤 객체1 설명 ({len(ann_info.get('ObjectExp1', '').split())}어절)", expanded=True):
+                    st.write(ann_info.get('ObjectExp1', 'N/A'))
+                
+                with st.expander(f"🏛️ 객체2 설명 ({len(ann_info.get('ObjectExp2', '').split())}어절)", expanded=True):
+                    st.write(ann_info.get('ObjectExp2', 'N/A'))
+    else:
+        # Empty state
+        with st.container(border=True):
+            st.info("📝 이미지를 업로드하고 분석을 시작하면 결과가 여기에 표시됩니다.")
+            
+            # 높이 맞추기
+            for _ in range(10):
+                st.write("")
+    # with col_right:
+    #     st.markdown("### 📊 분석 결과")
+        
+    #     if st.session_state.get('analysis_result'):
+    #         result = st.session_state['analysis_result']
+            
+    #         # 통합 설명문
+    #         with st.container(border=True):
+    #             st.markdown("#### 📄 통합 설명문")
+    #             if 'annotation_info' in result and 'Explanation' in result['annotation_info']:
+    #                 st.markdown(f"**{result['annotation_info']['Explanation']}**")
+            
+    #         # 카테고리 & 메타데이터
+    #         col1, col2 = st.columns(2)
+            
+    #         with col1:
+    #             with st.container(border=True):
+    #                 st.markdown("##### 🏷️ 카테고리")
+    #                 if 'category_info' in result:
+    #                     cat_info = result['category_info']
+                        
+    #                     loc_labels = {1: "실내", 2: "실외", 3: "혼합"}
+    #                     era_labels = {1: "전통", 2: "현대", 3: "혼합", 4: "기타"}
+                        
+    #                     st.write(f"**장소**: {loc_labels.get(cat_info.get('LocationCategory', 0), 'N/A')}")
+    #                     st.write(f"**시대**: {era_labels.get(cat_info.get('EraCategory', 0), 'N/A')}")
+            
+    #         with col2:
+    #             with st.container(border=True):
+    #                 st.markdown("##### 📋 메타데이터")
+    #                 if 'meta' in result:
+    #                     meta = result['meta']
+    #                     st.write(f"**크기**: {meta.get('width', 'N/A')} × {meta.get('height', 'N/A')} px")
+    #                     st.write(f"**형식**: {meta.get('format', 'N/A')}")
+            
+    #         # 상세 설명문
+    #         with st.container(border=True):
+    #             st.markdown("#### ✍️ 상세 설명문")
+                
+    #             if 'annotation_info' in result:
+    #                 ann_info = result['annotation_info']
+                    
+    #                 with st.expander("🎬 장면 설명", expanded=True):
+    #                     st.write(ann_info.get('SceneExp', 'N/A'))
+                    
+    #                 with st.expander("🎨 색감 설명", expanded=True):
+    #                     st.write(ann_info.get('ColortoneExp', 'N/A'))
+                    
+    #                 with st.expander("📐 구도 설명", expanded=True):
+    #                     st.write(ann_info.get('CompositionExp', 'N/A'))
+                    
+    #                 with st.expander("👤 객체1 설명", expanded=True):
+    #                     st.write(ann_info.get('ObjectExp1', 'N/A'))
+                    
+    #                 with st.expander("🏛️ 객체2 설명", expanded=True):
+    #                     st.write(ann_info.get('ObjectExp2', 'N/A'))
+    #     else:
+    #         # Empty state
+    #         with st.container(border=True):
+    #             st.info("📝 이미지를 업로드하고 분석을 시작하면 결과가 여기에 표시됩니다.")
+                
+    #             # 높이 맞추기
+    #             for _ in range(10):
+    #                 st.write("")
 
 with tab2:
     st.markdown("### 💾 JSON 데이터 관리")
