@@ -28,7 +28,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 커스텀 CSS
+# 커스텀 CSS - 다크모드 대응
 st.markdown("""
 <style>
     /* 메인 헤더 스타일 */
@@ -45,47 +45,52 @@ st.markdown("""
     
     /* 서브헤더 스타일 */
     .sub-header {
-        color: #4a5568;
+        color: #718096;
         font-size: 1.1rem;
         text-align: center;
         margin-top: -1.5rem;
         margin-bottom: 2rem;
     }
     
-    /* 탭 스타일링 */
+    /* 다크모드 대응 탭 스타일링 */
     .stTabs [data-baseweb="tab-list"] {
         gap: 24px;
-        border-bottom: 2px solid #e2e8f0;
+        border-bottom: 2px solid rgba(128, 128, 128, 0.3);
     }
     
     .stTabs [data-baseweb="tab"] {
         height: 50px;
         padding-left: 24px;
         padding-right: 24px;
-        background-color: white;
+        background-color: transparent;
         border-radius: 12px 12px 0px 0px;
         font-weight: 600;
+        color: inherit;
     }
     
+    /* 선택된 탭 - 다크모드 대응 */
     .stTabs [aria-selected="true"] {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        color: white !important;
     }
     
-    /* 컨테이너 스타일 */
+    /* 선택되지 않은 탭 호버 */
+    .stTabs [aria-selected="false"]:hover {
+        background-color: rgba(128, 128, 128, 0.1);
+    }
+    
+    /* 컨테이너 스타일 - 다크모드 대응 */
     div[data-testid="stContainer"] {
-        background-color: #ffffff;
         padding: 1.5rem;
         border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     
-    /* 메트릭 카드 스타일 */
+    /* 메트릭 카드 스타일 - 다크모드 대응 */
     div[data-testid="metric-container"] {
-        background-color: #f7fafc;
+        background-color: rgba(128, 128, 128, 0.1);
         padding: 1rem;
         border-radius: 8px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(128, 128, 128, 0.2);
     }
     
     /* 버튼 호버 효과 */
@@ -110,6 +115,15 @@ st.markdown("""
     .streamlit-expanderHeader {
         font-weight: 600;
         font-size: 1.1rem;
+    }
+    
+    /* 이미지 컨테이너 높이 제한 */
+    .image-container {
+        max-height: 400px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -514,8 +528,10 @@ with tab1:
                     'mime_type': f"image/{image.format.lower()}"
                 }
                 
-                # 이미지 미리보기
+                # 이미지 미리보기 - 높이 제한
+                st.markdown('<div class="image-container">', unsafe_allow_html=True)
                 st.image(image, caption="업로드된 이미지", use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
         # 이미지 정보 패널
@@ -537,6 +553,10 @@ with tab1:
                 """)
             else:
                 st.info("이미지를 업로드하면 정보가 표시됩니다")
+                
+                # 높이 맞추기 위한 빈 공간
+                for _ in range(5):
+                    st.write("")
     
     # 프롬프트 편집 섹션
     with st.container(border=True):
@@ -604,7 +624,6 @@ with tab1:
                         st.session_state['analysis_result'] = result
                         st.session_state['analysis_status'] = 'completed'
                         st.success("✅ 분석이 완료되었습니다! '분석 결과' 탭을 확인하세요.")
-                        st.balloons()
                         
                     except Exception as e:
                         st.session_state['analysis_status'] = 'waiting'
@@ -733,18 +752,6 @@ with tab3:
     else:
         # Empty state
         st.info("📝 분석 결과가 없습니다. 먼저 이미지를 분석해주세요.")
-
-# 푸터
-# st.markdown("---")
-# st.markdown(
-#     """
-#     <div style='text-align: center; color: #718096; font-size: 0.9rem;'>
-#         📧 문의사항이 있으시면 관리자에게 연락해주세요
-#     </div>
-#     """,
-#     unsafe_allow_html=True
-# )
-
 
 
 # """
