@@ -396,9 +396,9 @@ with st.sidebar:
     """)
 
     st.divider()
-    st.markdown("### ℹ️ 정보")
-    st.markdown("**모델**: gemini-2.5-flash")
-    st.markdown("**출력**: JSON (category_info, annotation_info)")
+    # st.markdown("### ℹ️ 정보")
+    # st.markdown("**모델**: gemini-2.5-flash")
+    # st.markdown("**출력**: JSON (category_info, annotation_info)")
 
 # 메인 컨텐츠 - 2개 컬럼
 col1, col2 = st.columns([1, 1])
