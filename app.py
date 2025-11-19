@@ -658,19 +658,19 @@ with tab1:
                 if 'annotation_info' in result:
                     ann_info = result['annotation_info']
                     
-                    with st.expander("🎬 정경 설명", expanded=False):
+                    with st.expander("🎬 정경 설명", expanded=True):
                         st.write(ann_info.get('SceneExp', 'N/A'))
                     
-                    with st.expander("🎨 색감 설명", expanded=False):
+                    with st.expander("🎨 색감 설명", expanded=True):
                         st.write(ann_info.get('ColortoneExp', 'N/A'))
                     
-                    with st.expander("📐 구도 설명", expanded=False):
+                    with st.expander("📐 구도 설명", expanded=True):
                         st.write(ann_info.get('CompositionExp', 'N/A'))
                     
-                    with st.expander("👤 객체1 설명", expanded=False):
+                    with st.expander("👤 객체1 설명", expanded=True):
                         st.write(ann_info.get('ObjectExp1', 'N/A'))
                     
-                    with st.expander("🏛️ 객체2 설명", expanded=False):
+                    with st.expander("🏛️ 객체2 설명", expanded=True):
                         st.write(ann_info.get('ObjectExp2', 'N/A'))
         else:
             # Empty state
