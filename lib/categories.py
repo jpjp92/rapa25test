@@ -11,7 +11,9 @@ CATEGORY_DATA = {
     "LocationCategory": [
         {"class": 1, "label": "실내"},
         {"class": 2, "label": "실외"},
-        {"class": 3, "label": "혼합"}
+        {"class": 3, "label": "혼합"},
+        {"class": 4, "label": "기타"},
+        
     ],
     "EraCategory": [
         {"class": 1, "label": "전통"},
