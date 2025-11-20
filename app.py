@@ -664,7 +664,7 @@ with col_right:
                 if 'category_info' in result:
                     cat_info = result['category_info']
                     
-                    loc_labels = {1: "실내", 2: "실외", 3: "혼합"}
+                    loc_labels = {1: "실내", 2: "실외", 3: "혼합", 4: "기타"}
                     era_labels = {1: "전통", 2: "현대", 3: "혼합", 4: "기타"}
                     
                     loc_value = cat_info.get('LocationCategory', 0)
