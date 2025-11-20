@@ -527,50 +527,165 @@ with tab1:
         st.markdown("### 📝 입력")
         
         # 이미지 업로드 섹션
+        # 이미지 업로드 섹션
         with st.container(border=True):
             st.markdown("#### 📸 이미지 업로드")
             
+            # 드래그앤드롭 스타일 추가
+            st.markdown("""
+            <style>
+            [data-testid="stFileUploadDropzone"] {
+                background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+                border: 2px dashed rgba(102, 126, 234, 0.4);
+                border-radius: 12px;
+                padding: 2rem;
+                transition: all 0.3s ease;
+            }
+            
+            [data-testid="stFileUploadDropzone"]:hover {
+                background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+                border-color: rgba(102, 126, 234, 0.6);
+                transform: scale(1.01);
+            }
+            
+            [data-testid="stFileUploadDropzone"] p {
+                color: #718096;
+                font-weight: 500;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+            
+            # 업로드 전 안내 메시지 표시
+            if not st.session_state.get('uploaded_image'):
+                st.markdown("""
+                <div style="text-align: center; padding: 1rem 0; color: #718096;">
+                    <p style="font-size: 2rem; margin-bottom: 0.5rem;">📸</p>
+                    <p style="font-size: 0.95rem;">이미지를 드래그하거나 클릭하여 업로드하세요</p>
+                    <p style="font-size: 0.85rem; color: #a0aec0; margin-top: 0.3rem;">
+                        JPG, PNG, WEBP (최대 20MB)
+                    </p>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            # 파일 업로더
             uploaded_file = st.file_uploader(
                 "배경 이미지를 선택하세요",
                 type=['jpg', 'jpeg', 'png', 'webp'],
-                help="JPG, PNG, WEBP 형식 지원 (최대 20MB)"
+                help="드래그앤드롭 또는 클릭하여 업로드",
+                label_visibility="collapsed"  # 라벨 숨기기
             )
             
+            # 이미지 업로드 처리
             if uploaded_file:
-                # 이미지 저장 (임시 파일)
-                temp_dir = Path("temp_images")
-                temp_dir.mkdir(exist_ok=True)
+                try:
+                    # 이미지 저장 (임시 파일)
+                    temp_dir = Path("temp_images")
+                    temp_dir.mkdir(exist_ok=True)
+                    
+                    temp_image_path = temp_dir / uploaded_file.name
+                    with open(temp_image_path, 'wb') as f:
+                        f.write(uploaded_file.getbuffer())
+                    
+                    # 이미지 메타데이터 추출
+                    image = Image.open(temp_image_path)
+                    image_metadata = {
+                        'width': image.width,
+                        'height': image.height,
+                        'format': image.format,
+                        'file_size': temp_image_path.stat().st_size
+                    }
+                    
+                    # 세션 상태 저장
+                    st.session_state['uploaded_image'] = {
+                        'path': str(temp_image_path),
+                        'metadata': image_metadata,
+                        'mime_type': f"image/{image.format.lower()}"
+                    }
+                    
+                    # 업로드 성공 메시지
+                    st.success(f"✅ {uploaded_file.name} 업로드 완료")
+                    
+                    # 이미지 미리보기 (높이 제한)
+                    st.markdown("""
+                    <style>
+                    .image-preview-container {
+                        max-height: 300px;
+                        overflow: hidden;
+                        border-radius: 8px;
+                        margin: 1rem 0;
+                    }
+                    </style>
+                    """, unsafe_allow_html=True)
+                    
+                    st.markdown('<div class="image-preview-container">', unsafe_allow_html=True)
+                    st.image(image, caption=f"📷 {uploaded_file.name}", use_container_width=True)
+                    st.markdown('</div>', unsafe_allow_html=True)
+                    
+                    # 이미지 정보 표시
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("📐 해상도", f"{image_metadata['width']}×{image_metadata['height']}")
+                    with col2:
+                        file_size_mb = image_metadata['file_size'] / (1024 * 1024)
+                        if file_size_mb < 1:
+                            size_str = f"{image_metadata['file_size'] / 1024:.1f} KB"
+                        else:
+                            size_str = f"{file_size_mb:.1f} MB"
+                        st.metric("💾 크기", size_str)
+                    with col3:
+                        st.metric("📄 형식", image_metadata['format'])
+                    
+                except Exception as e:
+                    st.error(f"❌ 이미지 처리 오류: {str(e)}")
+                    # 오류 시 세션 상태 초기화
+                    if 'uploaded_image' in st.session_state:
+                        del st.session_state['uploaded_image']
+
+        
+        # with st.container(border=True):
+        #     st.markdown("#### 📸 이미지 업로드")
+            
+        #     uploaded_file = st.file_uploader(
+        #         "배경 이미지를 선택하세요",
+        #         type=['jpg', 'jpeg', 'png', 'webp'],
+        #         help="JPG, PNG, WEBP 형식 지원 (최대 20MB)"
+        #     )
+            
+        #     if uploaded_file:
+        #         # 이미지 저장 (임시 파일)
+        #         temp_dir = Path("temp_images")
+        #         temp_dir.mkdir(exist_ok=True)
                 
-                temp_image_path = temp_dir / uploaded_file.name
-                with open(temp_image_path, 'wb') as f:
-                    f.write(uploaded_file.getbuffer())
+        #         temp_image_path = temp_dir / uploaded_file.name
+        #         with open(temp_image_path, 'wb') as f:
+        #             f.write(uploaded_file.getbuffer())
                 
-                # 이미지 메타데이터 추출
-                image = Image.open(temp_image_path)
-                image_metadata = {
-                    'width': image.width,
-                    'height': image.height,
-                    'format': image.format,
-                    'file_size': temp_image_path.stat().st_size
-                }
+        #         # 이미지 메타데이터 추출
+        #         image = Image.open(temp_image_path)
+        #         image_metadata = {
+        #             'width': image.width,
+        #             'height': image.height,
+        #             'format': image.format,
+        #             'file_size': temp_image_path.stat().st_size
+        #         }
                 
-                st.session_state['uploaded_image'] = {
-                    'path': str(temp_image_path),
-                    'metadata': image_metadata,
-                    'mime_type': f"image/{image.format.lower()}"
-                }
+        #         st.session_state['uploaded_image'] = {
+        #             'path': str(temp_image_path),
+        #             'metadata': image_metadata,
+        #             'mime_type': f"image/{image.format.lower()}"
+        #         }
                 
-                # 이미지 미리보기 - 높이 제한
-                st.markdown('<div class="image-container">', unsafe_allow_html=True)
-                st.image(image, caption="업로드된 이미지", use_container_width=True)
-                st.markdown('</div>', unsafe_allow_html=True)
+        #         # 이미지 미리보기 - 높이 제한
+        #         st.markdown('<div class="image-container">', unsafe_allow_html=True)
+        #         st.image(image, caption="업로드된 이미지", use_container_width=True)
+        #         st.markdown('</div>', unsafe_allow_html=True)
                 
-                # 이미지 정보
-                col_a, col_b = st.columns(2)
-                with col_a:
-                    st.metric("해상도", f"{image_metadata['width']}×{image_metadata['height']}")
-                with col_b:
-                    st.metric("크기", f"{image_metadata['file_size']:,} bytes")
+        #         # 이미지 정보
+        #         col_a, col_b = st.columns(2)
+        #         with col_a:
+        #             st.metric("해상도", f"{image_metadata['width']}×{image_metadata['height']}")
+        #         with col_b:
+        #             st.metric("크기", f"{image_metadata['file_size']:,} bytes")
         
         # 프롬프트 편집 섹션
         with st.container(border=True):
