@@ -383,7 +383,7 @@ if __name__ == "__main__":
 
         result = await analyzer.analyze_image(
             file_path=image_path,
-            mime_type="image/jpeg",
+            mime_type="image/jpg",
             image_metadata=metadata
         )
 
