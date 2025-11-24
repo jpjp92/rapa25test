@@ -910,28 +910,28 @@ with col_right:
 #                     st.caption("최소 50어절 필요")
        
         
-        # 상세 설명문
-        with st.container(border=True):
-            st.markdown("#### ✍️ 상세 설명문")
+        # # 상세 설명문
+        # with st.container(border=True):
+        #     st.markdown("#### ✍️ 상세 설명문")
             
-            if 'annotation_info' in result:
-                ann_info = result['annotation_info']
+        #     if 'annotation_info' in result:
+        #         ann_info = result['annotation_info']
                 
-                # 각 설명문과 어절 수를 함께 표시
-                with st.expander(f"🎬 장면 설명 ({len(ann_info.get('SceneExp', '').split())}어절)", expanded=True):
-                    st.write(ann_info.get('SceneExp', 'N/A'))
+        #         # 각 설명문과 어절 수를 함께 표시
+        #         with st.expander(f"🎬 장면 설명 ({len(ann_info.get('SceneExp', '').split())}어절)", expanded=True):
+        #             st.write(ann_info.get('SceneExp', 'N/A'))
                 
-                with st.expander(f"🎨 색감 설명 ({len(ann_info.get('ColortoneExp', '').split())}어절)", expanded=True):
-                    st.write(ann_info.get('ColortoneExp', 'N/A'))
+        #         with st.expander(f"🎨 색감 설명 ({len(ann_info.get('ColortoneExp', '').split())}어절)", expanded=True):
+        #             st.write(ann_info.get('ColortoneExp', 'N/A'))
                 
-                with st.expander(f"📐 구도 설명 ({len(ann_info.get('CompositionExp', '').split())}어절)", expanded=True):
-                    st.write(ann_info.get('CompositionExp', 'N/A'))
+        #         with st.expander(f"📐 구도 설명 ({len(ann_info.get('CompositionExp', '').split())}어절)", expanded=True):
+        #             st.write(ann_info.get('CompositionExp', 'N/A'))
                 
-                with st.expander(f"👤 객체1 설명 ({len(ann_info.get('ObjectExp1', '').split())}어절)", expanded=True):
-                    st.write(ann_info.get('ObjectExp1', 'N/A'))
+        #         with st.expander(f"👤 객체1 설명 ({len(ann_info.get('ObjectExp1', '').split())}어절)", expanded=True):
+        #             st.write(ann_info.get('ObjectExp1', 'N/A'))
                 
-                with st.expander(f"🏛️ 객체2 설명 ({len(ann_info.get('ObjectExp2', '').split())}어절)", expanded=True):
-                    st.write(ann_info.get('ObjectExp2', 'N/A'))
+        #         with st.expander(f"🏛️ 객체2 설명 ({len(ann_info.get('ObjectExp2', '').split())}어절)", expanded=True):
+        #             st.write(ann_info.get('ObjectExp2', 'N/A'))
     else:
         # Empty state
         with st.container(border=True):
