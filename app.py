@@ -817,20 +817,33 @@ with col_right:
                 st.markdown("##### 📊 음절 수 체크")
                 if 'annotation_info' in result:
                     ann_info = result['annotation_info']
-                    
-                    # 총 음절 수 계산 (띄어쓰기 포함 모든 문자)
-                    total_syllables = sum([
-                        len(ann_info.get(key, '')) 
+
+                    # 총 음절 수 계산 (띄어쓰기 제외)
+                    total_syllables_pure = sum([
+                        # .replace(' ', '')를 추가하여 공백을 제거합니다.
+                        len(ann_info.get(key, '').replace(' ', '')) 
                         for key in ['SceneExp', 'ColortoneExp', 'CompositionExp', 'ObjectExp1', 'ObjectExp2']
                     ])
                     
-                    # 50음절 기준 충족 여부
-                    status = "✅ 충족" if total_syllables >= 50 else f"❌ 미달 (-{50-total_syllables})"
-                    
-                    st.write(f"**총 음절**: {total_syllables}음절")
+                    # 출력 부분 변경
+                    status = "✅ 충족" if total_syllables_pure >= 50 else f"❌ 미달 (-{50-total_syllables_pure})"
+                    st.write(f"**총 음절 (공백 제외)**: {total_syllables_pure}음절") 
                     st.write(f"**상태**: {status}")
-                    st.write("")  # 공백 추가
-                    st.caption("최소 50음절 필요")
+                    st.caption("최소 50음절 (공백 제외) 필요") # 캡션 변경
+                    
+                    # # 총 음절 수 계산 (띄어쓰기 포함 모든 문자)
+                    # total_syllables = sum([
+                    #     len(ann_info.get(key, '')) 
+                    #     for key in ['SceneExp', 'ColortoneExp', 'CompositionExp', 'ObjectExp1', 'ObjectExp2']
+                    # ])
+                    
+                    # # 50음절 기준 충족 여부
+                    # status = "✅ 충족" if total_syllables >= 50 else f"❌ 미달 (-{50-total_syllables})"
+                    
+                    # st.write(f"**총 음절**: {total_syllables}음절")
+                    # st.write(f"**상태**: {status}")
+                    # st.write("")  # 공백 추가
+                    # st.caption("최소 50음절 필요")
         
         # 상세 설명문
         with st.container(border=True):
