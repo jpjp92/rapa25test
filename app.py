@@ -809,7 +809,7 @@ with col_right:
                     
                     st.write(f"**장소**: {loc_labels.get(loc_value, 'N/A')} ({loc_value})")
                     st.write(f"**시대**: {era_labels.get(era_value, 'N/A')} ({era_value})")
-                    st.write("")  # 공백 추가
+                    # st.write("")  # 공백
                     st.caption("카테고리 분류 완료")
         
         with col2:
@@ -829,7 +829,7 @@ with col_right:
                     status = "✅ 충족" if total_syllables_pure >= 50 else f"❌ 미달 (-{50-total_syllables_pure})"
                     st.write(f"**총 음절 (공백 제외)**: {total_syllables_pure}음절") 
                     st.write(f"**상태**: {status}")
-                    st.write("")
+                    # st.write("")
                     st.caption("최소 50음절 (공백 제외) 필요") # 캡션 변경
                     
                     # # 총 음절 수 계산 (띄어쓰기 포함 모든 문자)
