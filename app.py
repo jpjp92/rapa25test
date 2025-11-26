@@ -829,6 +829,7 @@ with col_right:
                     status = "✅ 충족" if total_syllables_pure >= 50 else f"❌ 미달 (-{50-total_syllables_pure})"
                     st.write(f"**총 음절 (공백 제외)**: {total_syllables_pure}음절") 
                     st.write(f"**상태**: {status}")
+                    st.write("")
                     st.caption("최소 50음절 (공백 제외) 필요") # 캡션 변경
                     
                     # # 총 음절 수 계산 (띄어쓰기 포함 모든 문자)
